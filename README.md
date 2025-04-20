@@ -1,6 +1,72 @@
 # TUBES-ALPRO
 
 
+## Pembagian Tugas
+
+### Tyo 
+1. **Pengembangan Core Program**:
+   - Implementasi struktur data utama (struct TimEsport)
+   - Fungsi-fungsi utama manajemen data (tambah, edit, hapus tim)
+   - Implementasi algoritma pencarian dan pengurutan
+   - Integrasi seluruh komponen program
+
+2. **Pengujian dan Debugging**:
+   - Memastikan semua fitur berjalan dengan baik
+   - Mengatasi bug yang muncul
+   - Membantu anggota lain jika mengalami kesulitan teknis
+
+3. **Mengarahkan tim**:
+   - Mengoordinasi pengembangan program
+   - Membantu anggota tim dalam memahami kode program
+
+### Raditya 
+1. **Pengembangan Fitur Statistik**:
+   - Implementasi fungsi perhitungan statistik (rata-rata poin, poin tertinggi/terendah)
+   - Implementasi tampilan statistik tim
+
+2. **Pengembangan UI CLI Program**:
+   - Fungsi menu dan navigasi program
+   - Format tampilan data tim
+   - Pembuatan antarmuka yang user-friendly
+
+3. **Dokumentasi Kode**:
+   - Menambahkan komentar pada kode untuk memperjelas fungsi
+   - Menyiapkan file README
+
+### Pradipa 
+1. **Dokumentasi dan Laporan**:
+   - Menyusun laporan deskripsi masalah
+   - Menjelaskan fitur-fitur program
+   - Menyiapkan screenshot output program
+   - Menjelaskan pembagian tugas
+
+2. **Testing**:
+   - Melakukan pengujian program dari sisi pengguna
+   - Mencatat bug dan masalah yang ditemukan
+   - Membantu dalam pengumpulan data dummy untuk pengujian
+
+3. **Pekerjaan yang Lebih Sederhana**:
+   - Implementasi fungsi sederhana seperti tampilkanMenu() dan tampilkanSemuaTim()
+   - Bantuan dalam bagian lain yang lebih mudah dipahami
+
+## Jadwal dan Koordinasi
+
+1. **Minggu 1**: 
+   - Tyo: Membuat struktur dasar program dan implementasi fungsi-fungsi utama
+   - Raditya: Mempelajari struktur dasar dan mulai bekerja pada UI
+   - Pradipa: Mulai menyusun dokumen laporan dan mempelajari program
+
+2. **Minggu 2**:
+   - Tyo: Menyelesaikan implementasi algoritma pengurutan dan pencarian
+   - Raditya: Mengembangkan fungsi statistik dan menyelesaikan UI
+   - Pradipa: Mulai membuat dokumentasi kode dan melakukan pengujian awal
+
+3. **Minggu 3-4**:
+   - Tyo: Integrasi seluruh komponen dan debugging
+   - Raditya: Penyelesaian dokumentasi kode dan README
+   - Pradipa: Menyelesaikan laporan dan melakukan pengujian akhir
+
+
 # Sistem Pendaftaran Lomba Esport Antar Fakultas
 
 Program ini adalah aplikasi berbasis terminal untuk mengelola pendaftaran tim lomba esport antar fakultas, yang diimplementasikan menggunakan bahasa pemrograman Go.
