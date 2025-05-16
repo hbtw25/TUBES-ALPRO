@@ -78,8 +78,8 @@ func tambahTim() {
 		fmt.Println("\nMaaf, kapasitas tim sudah penuh!")
 		return
 	}
-
-	var tim TimEsport
+	
+	var tim TimEsport //variabel tim esport
 	
 	fmt.Println("\n--- TAMBAH TIM BARU ---")
 	
