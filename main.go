@@ -58,17 +58,20 @@ func main() {
 
 // Menampilkan menu utama
 func tampilkanMenu() {
-	fmt.Println("\n========================================")
-	fmt.Println("   SISTEM PENDAFTARAN LOMBA ESPORT")
+	fmt.Println()
 	fmt.Println("========================================")
-	fmt.Println("1. Tambah Tim Baru")
-	fmt.Println("2. Tampilkan Semua Tim")
-	fmt.Println("3. Cari Tim")
-	fmt.Println("4. Update Data Tim")
-	fmt.Println("5. Hapus Tim")
-	fmt.Println("6. Tampilkan Statistik Tim")
-	fmt.Println("7. Urutkan Tim")
-	fmt.Println("0. Keluar")
+	fmt.Printf("| %-38s |\n", "SISTEM PENDAFTARAN LOMBA ESPORT")
+	fmt.Println("========================================")
+	fmt.Printf("| %-2s | %-30s |\n", "No", "Menu")
+	fmt.Println("----------------------------------------")
+	fmt.Printf("| %-2d | %-30s |\n", 1, "Tambah Tim Baru")
+	fmt.Printf("| %-2d | %-30s |\n", 2, "Tampilkan Semua Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 3, "Cari Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 4, "Update Data Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 5, "Hapus Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 6, "Tampilkan Statistik Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 7, "Urutkan Tim")
+	fmt.Printf("| %-2d | %-30s |\n", 0, "Keluar")
 	fmt.Println("========================================")
 }
 
