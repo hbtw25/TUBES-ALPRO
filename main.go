@@ -15,13 +15,14 @@ type TimEsport struct {
 }
 
 // Variabel global untuk menyimpan data tim
-var timData [100]TimEsport // Array statis dengan kapasitas 100 tim
+var timData [5]TimEsport // Array statis dengan kapasitas 100 tim
 var jumlahTim int = 0      // Jumlah tim yang tersimpan
 
 // Fungsi utama
 func main() {
 	var pilihan int
-
+	padding := "                                  "
+	
 	for {
 		tampilkanMenu()
 		fmt.Print("Pilihan Anda: ")
@@ -43,12 +44,11 @@ func main() {
 		case 7:
 			urutkanTim()
 		case 0:
-			fmt.Println("\nTerima kasih telah menggunakan sistem pendaftaran lomba esport!")
+			fmt.Println(paddding + "Terima kasih telah menggunakan sistem pendaftaran lomba esport!")
 			return
 		default:
-			fmt.Println("\nPilihan tidak valid. Silakan coba lagi.")
+			fmt.Println(padding + "Pilihan tidak valid. Silakan coba lagi.")
 		}
-		
 		fmt.Println("\nTekan Enter untuk melanjutkan...")
 		fmt.Scanln() // Membersihkan buffer
 		var dummy string
@@ -58,47 +58,57 @@ func main() {
 
 // Menampilkan menu utama
 func tampilkanMenu() {
-	fmt.Println()
-	fmt.Println("========================================")
-	fmt.Printf("| %-38s |\n", "SISTEM PENDAFTARAN LOMBA ESPORT")
-	fmt.Println("========================================")
-	fmt.Printf("| %-2s | %-30s |\n", "No", "Menu")
-	fmt.Println("----------------------------------------")
-	fmt.Printf("| %-2d | %-30s |\n", 1, "Tambah Tim Baru")
-	fmt.Printf("| %-2d | %-30s |\n", 2, "Tampilkan Semua Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 3, "Cari Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 4, "Update Data Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 5, "Hapus Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 6, "Tampilkan Statistik Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 7, "Urutkan Tim")
-	fmt.Printf("| %-2d | %-30s |\n", 0, "Keluar")
-	fmt.Println("========================================")
+    indent := "                                  " // 34 spasi
+    fmt.Println(indent + "╔═══════════════════════════════════════════════════════════════════════════╗")
+    fmt.Println(indent + "║                       SISTEM PENDAFTARAN LOMBA ESPORT                     ║")
+    fmt.Println(indent + "║                Tugas Besar Algortima Pemrograman Smester 2                ║")
+    fmt.Println(indent + "║                                                                           ║")
+    fmt.Println(indent + "║  Anggota:                                                                 ║")
+    fmt.Println(indent + "║   - Harsya Brahmantyo                                                     ║")
+    fmt.Println(indent + "║   - Raditya Vihandika Bari Jabran                                         ║")
+    fmt.Println(indent + "║   - Muhamad Pradipa Dwi Pahlevi                                           ║")
+    fmt.Println(indent + "╠═══════════════════════════════════════════════════════════════════════════╣")
+    fmt.Println(indent + "║ 1. Tambah Tim                                                             ║")
+    fmt.Println(indent + "║ 2. Lihat Data Tim                                                         ║")
+    fmt.Println(indent + "║ 3. Cari Tim                                                               ║")
+    fmt.Println(indent + "║ 4. Update Data Tim                                                        ║")
+    fmt.Println(indent + "║ 5. Hapus Tim                                                              ║")
+    fmt.Println(indent + "║ 6. Statistik Tim                                                          ║")
+    fmt.Println(indent + "║ 7. Urutkan Tim                                                            ║")
+    fmt.Println(indent + "║ 0. Keluar                                                                 ║")
+    fmt.Println(indent + "║                                                             ┌───────────┐ ║")
+    fmt.Println(indent + "║                                                             │ MAIN MENU │ ║")
+    fmt.Println(indent + "║                                                             └───────────┘ ║")
+    fmt.Println(indent + "╚═══════════════════════════════════════════════════════════════════════════╝")
+    fmt.Print(indent + "")
 }
+
 
 // Menambahkan tim baru
 func tambahTim() {
-	if jumlahTim >= 100 {
-		fmt.Println("\nMaaf, kapasitas tim sudah penuh!")
+	if jumlahTim >= 5 {
+		indent := "                                   "
+		fmt.Println(indent + "Maaf, kapasitas tim sudah penuh!")
 		return
 	}
 
 	var tim TimEsport
+	indent := "                                  "
 	
-	fmt.Println("\n--- TAMBAH TIM BARU ---")
+	fmt.Println(indent + "TAMBAH TIM BARU")
 	
-	// Input ID Tim
 	for {
-		fmt.Print("ID Tim: ")
+		fmt.Print(indent + "ID Tim: ")
 		fmt.Scan(&tim.ID)
 		
 		if cariTimByID(tim.ID) == -1 {
 			break
 		}
-		fmt.Println("ID Tim sudah digunakan. Silakan gunakan ID lain.")
+		fmt.Println(indent + "ID Tim sudah digunakan. Silakan gunakan ID lain.")
 	}
 	
 	// Input Nama Tim
-	fmt.Print("Nama Tim: ")
+	fmt.Print(indent + "Nama Tim: ")
 	fmt.Scan(&tim.Nama)
 	var namaTambahan string
 	fmt.Scanln(&namaTambahan) // Menangkap sisa input setelah spasi
@@ -106,7 +116,7 @@ func tambahTim() {
 	tim.Nama = strings.TrimSpace(tim.Nama)
 	
 	// Input Fakultas
-	fmt.Print("Fakultas: ")
+	fmt.Print(indent + "Fakultas: ")
 	fmt.Scan(&tim.Fakultas)
 	var fakultasTambahan string
 	fmt.Scanln(&fakultasTambahan) // Menangkap sisa input setelah spasi
@@ -114,36 +124,41 @@ func tambahTim() {
 	tim.Fakultas = strings.TrimSpace(tim.Fakultas)
 	
 	// Input Poin
-	fmt.Print("Poin: ")
+	fmt.Print(indent + "Poin: ")
 	fmt.Scan(&tim.Poin)
 	
 	// Simpan data tim
 	timData[jumlahTim] = tim
 	jumlahTim++
 	
-	fmt.Println("\nTim berhasil ditambahkan!")
+	fmt.Println(indent + "Tim berhasil ditambahkan!")
 }
 
 // Menampilkan semua tim
 func tampilkanSemuaTim() {
 	if jumlahTim == 0 {
-		fmt.Println("\nBelum ada tim yang terdaftar.")
+		padding := "                                  "
+		fmt.Println(padding + "Belum ada tim yang terdaftar...")
 		return
 	}
+
+	padding := "                                  "
 	
-	fmt.Println("\n--- DAFTAR SEMUA TIM ---")
-	fmt.Printf("%-5s %-20s %-20s %-5s\n", "ID", "Nama Tim", "Fakultas", "Poin")
-	fmt.Println("---------------------------------------------------")
-	
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════════════════════════════════════════╗")
+	fmt.Println(padding + "║ ID  |      Nama Tim        |      Fakultas        | Poin          ║")
+	fmt.Println(padding + "╠═══════════════════════════════════════════════════════════════════╣")
+
 	for i := 0; i < jumlahTim; i++ {
 		if !timData[i].IsDeleted {
-			fmt.Printf("%-5s %-20s %-20s %-5d\n", 
-				timData[i].ID, 
-				timData[i].Nama, 
-				timData[i].Fakultas, 
+			fmt.Printf(padding+"║ %-3s | %-20s | %-20s | %-13d ║\n",
+				timData[i].ID,
+				timData[i].Nama,
+				timData[i].Fakultas,
 				timData[i].Poin)
 		}
 	}
+	fmt.Println(padding + "╚═══════════════════════════════════════════════════════════════════╝")
 }
 
 // Mencari tim berdasarkan ID (sequential search)
@@ -170,27 +185,32 @@ func cariTimByNama(nama string) int {
 func cariTim() {
 	var pilihan int
 	
-	fmt.Println("\n--- CARI TIM ---")
-	fmt.Println("1. Cari berdasarkan ID Tim")
-	fmt.Println("2. Cari berdasarkan Nama Tim")
-	fmt.Print("Pilihan Anda: ")
+	padding := "                                  "
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════╗")
+	fmt.Println(padding + "║           CARI TIM            ║")
+	fmt.Println(padding + "╠═══════════════════════════════╣")
+	fmt.Println(padding + "║ 1. Cari berdasarkan ID Tim    ║")
+	fmt.Println(padding + "║ 2. Cari berdasarkan Nama Tim  ║")
+	fmt.Println(padding + "╚═══════════════════════════════╝")
+	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&pilihan)
 	
 	switch pilihan {
 	case 1:
 		var id string
-		fmt.Print("Masukkan ID Tim: ")
+		fmt.Print(padding + "Masukkan ID Tim: ")
 		fmt.Scan(&id)
 		
 		idx := cariTimByID(id)
 		if idx != -1 {
 			tampilkanDetailTim(idx)
 		} else {
-			fmt.Println("\nTim dengan ID tersebut tidak ditemukan.")
+			fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan.")
 		}
 	case 2:
 		var nama string
-		fmt.Print("Masukkan Nama Tim: ")
+		fmt.Print(padding + "Masukkan Nama Tim: ")
 		fmt.Scan(&nama)
 		var namaTambahan string
 		fmt.Scanln(&namaTambahan)
@@ -201,28 +221,33 @@ func cariTim() {
 		if idx != -1 {
 			tampilkanDetailTim(idx)
 		} else {
-			fmt.Println("\nTim dengan nama tersebut tidak ditemukan.")
+			fmt.Println(padding + "Tim dengan nama tersebut tidak ditemukan.")
 		}
 	default:
-		fmt.Println("\nPilihan tidak valid.")
+		fmt.Println(padding + "Pilihan tidak valid.")
 	}
 }
 
 // Menampilkan detail tim berdasarkan indeks
 func tampilkanDetailTim(idx int) {
-	fmt.Println("\n--- DETAIL TIM ---")
-	fmt.Println("ID Tim    :", timData[idx].ID)
-	fmt.Println("Nama Tim  :", timData[idx].Nama)
-	fmt.Println("Fakultas  :", timData[idx].Fakultas)
-	fmt.Println("Poin      :", timData[idx].Poin)
+	padding := "                                  " // 34 spasi, sesuaikan jika perlu
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════╗")
+	fmt.Println(padding + "║           DETAIL TIM          ║")
+	fmt.Println(padding + "╠═══════════════════════════════╣")
+	fmt.Printf(padding+"║ ID Tim    : %-17s ║\n", timData[idx].ID)
+	fmt.Printf(padding+"║ Nama Tim  : %-17s ║\n", timData[idx].Nama)
+	fmt.Printf(padding+"║ Fakultas  : %-17s ║\n", timData[idx].Fakultas)
+	fmt.Printf(padding+"║ Poin      : %-17d ║\n", timData[idx].Poin)
+	fmt.Println(padding + "╚═══════════════════════════════╝")
 }
 
 // Update data tim
 func updateTim() {
 	var id string
-	
-	fmt.Println("\n--- UPDATE DATA TIM ---")
-	fmt.Print("Masukkan ID Tim yang akan diupdate: ")
+	padding := "                                  "
+	fmt.Println(padding + "UPDATE DATA TIM")
+	fmt.Print(padding + "Masukkan ID Tim yang akan diupdate: ")
 	fmt.Scan(&id)
 	
 	idx := cariTimByID(id)
@@ -234,40 +259,46 @@ func updateTim() {
 	tampilkanDetailTim(idx)
 	
 	var pilihan int
-	fmt.Println("\nData apa yang ingin diupdate?")
-	fmt.Println("1. Nama Tim")
-	fmt.Println("2. Fakultas")
-	fmt.Println("3. Poin")
-	fmt.Print("Pilihan Anda: ")
+	padding = "                                  "
+	
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════╗")
+	fmt.Println(padding + "║  Data apa yang ingin diubah?  ║")
+	fmt.Println(padding + "╠═══════════════════════════════╣")
+	fmt.Println(padding + "║ 1. Nama Tim                   ║")
+	fmt.Println(padding + "║ 2. Fakultas                   ║")
+	fmt.Println(padding + "║ 3. Poin                       ║")
+	fmt.Println(padding + "╚═══════════════════════════════╝")
+	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&pilihan)
 	
 	switch pilihan {
 	case 1:
 		var nama string
-		fmt.Print("Nama Tim Baru: ")
+		fmt.Print(padding + "Nama Tim Baru: ")
 		fmt.Scan(&nama)
 		var namaTambahan string
 		fmt.Scanln(&namaTambahan)
 		nama = nama + namaTambahan
 		timData[idx].Nama = strings.TrimSpace(nama)
-		fmt.Println("\nNama tim berhasil diupdate!")
+		fmt.Println(padding + "Nama tim berhasil diupdate!")
 	case 2:
 		var fakultas string
-		fmt.Print("Fakultas Baru: ")
+		fmt.Print(padding + "Fakultas Baru: ")
 		fmt.Scan(&fakultas)
 		var fakultasTambahan string
 		fmt.Scanln(&fakultasTambahan)
 		fakultas = fakultas + fakultasTambahan
 		timData[idx].Fakultas = strings.TrimSpace(fakultas)
-		fmt.Println("\nFakultas berhasil diupdate!")
+		fmt.Println(padding + "Fakultas berhasil diupdate!")
 	case 3:
 		var poin int
-		fmt.Print("Poin Baru: ")
+		fmt.Print(padding + "Poin Baru: ")
 		fmt.Scan(&poin)
 		timData[idx].Poin = poin
-		fmt.Println("\nPoin berhasil diupdate!")
+		fmt.Println(padding + "Poin berhasil diupdate!")
 	default:
-		fmt.Println("\nPilihan tidak valid.")
+		fmt.Println(padding + "Pilihan tidak valid.")
 	}
 }
 
@@ -275,34 +306,37 @@ func updateTim() {
 func hapusTim() {
 	var id string
 	
-	fmt.Println("\n--- HAPUS TIM ---")
-	fmt.Print("Masukkan ID Tim yang akan dihapus: ")
+	padding := "                                  "
+	
+	fmt.Println(padding + "HAPUS TIM")
+	fmt.Print(padding + "Masukkan ID Tim yang akan dihapus: ")
 	fmt.Scan(&id)
 	
 	idx := cariTimByID(id)
 	if idx == -1 {
-		fmt.Println("\nTim dengan ID tersebut tidak ditemukan.")
+		fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan.")
 		return
 	}
 	
 	tampilkanDetailTim(idx)
 	
 	var konfirmasi string
-	fmt.Print("\nApakah Anda yakin ingin menghapus tim ini? (y/n): ")
+	fmt.Print(padding + "Apakah Anda yakin ingin menghapus tim ini? (y/n): ")
 	fmt.Scan(&konfirmasi)
 	
 	if strings.ToLower(konfirmasi) == "y" {
 		timData[idx].IsDeleted = true
-		fmt.Println("\nTim berhasil dihapus!")
+		fmt.Println(padding + "Tim berhasil dihapus!")
 	} else {
-		fmt.Println("\nPenghapusan dibatalkan.")
+		fmt.Println(padding + "Penghapusan dibatalkan.")
 	}
 }
 
 // Menampilkan statistik tim
 func tampilkanStatistik() {
 	if jumlahTim == 0 {
-		fmt.Println("\nBelum ada tim yang terdaftar.")
+		padding := "                                  "
+		fmt.Println(padding + "Belum ada tim yang terdaftar.")
 		return
 	}
 	
@@ -339,45 +373,63 @@ func tampilkanStatistik() {
 	}
 	
 	if jumlahTimAktif == 0 {
-		fmt.Println("\nBelum ada tim aktif yang terdaftar.")
+		padding := "                                  "
+		
+		fmt.Println(padding + "Belum ada tim aktif yang terdaftar.")
 		return
 	}
 	
 	rataRataPoin := float64(totalPoin) / float64(jumlahTimAktif)
 	
-	fmt.Println("\n--- STATISTIK TIM ---")
-	fmt.Println("Jumlah Tim Terdaftar :", jumlahTimAktif)
-	fmt.Printf("Rata-rata Poin       : %.2f\n", rataRataPoin)
-	fmt.Println("Poin Tertinggi       :", maxPoin, "(", timMaxPoin, ")")
-	fmt.Println("Poin Terendah        :", minPoin, "(", timMinPoin, ")")
+	padding := "                                  "
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════╗")
+	fmt.Println(padding + "║         STATISTIK TIM         ║")
+	fmt.Println(padding + "╚═══════════════════════════════╝")
+	fmt.Println(padding + "Jumlah Tim Terdaftar :", jumlahTimAktif)
+	fmt.Printf(padding + "Rata-rata Poin       : %.2f\n", rataRataPoin)
+	fmt.Println(padding + "Poin Tertinggi       :", maxPoin, "(", timMaxPoin, ")")
+	fmt.Println(padding + "Poin Terendah        :", minPoin, "(", timMinPoin, ")")
 }
 
 // Urutkan tim
 func urutkanTim() {
 	var pilihan, jenisUrutan int
+	padding := "                                  " // 34 spasi, sesuaikan jika perlu
 	
-	fmt.Println("\n--- URUTKAN TIM ---")
-	fmt.Println("Urutkan berdasarkan:")
-	fmt.Println("1. ID Tim")
-	fmt.Println("2. Nama Tim")
-	fmt.Println("3. Fakultas")
-	fmt.Println("4. Poin")
-	fmt.Print("Pilihan Anda: ")
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════╗")
+	fmt.Println(padding + "║        URUTKAN TIM            ║")
+	fmt.Println(padding + "╠═══════════════════════════════╣")
+	fmt.Println(padding + "║ 1. ID Tim                     ║")
+	fmt.Println(padding + "║ 2. Nama Tim                   ║")
+	fmt.Println(padding + "║ 3. Fakultas                   ║")
+	fmt.Println(padding + "║ 4. Poin                       ║")
+	fmt.Println(padding + "╚═══════════════════════════════╝")
+	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&pilihan)
 	
-	fmt.Println("\nJenis pengurutan:")
-	fmt.Println("1. Ascending (A-Z / 0-9)")
-	fmt.Println("2. Descending (Z-A / 9-0)")
-	fmt.Print("Pilihan Anda: ")
+	fmt.Println()
+	fmt.Println(padding + "╔════════════════════════════════════════════╗")
+	fmt.Println(padding + "║             JENIS PENGURUTAN               ║")
+	fmt.Println(padding + "╠════════════════════════════════════════════╣")
+	fmt.Println(padding + "║ 1. Ascending (A-Z / 0-9)                   ║")
+	fmt.Println(padding + "║ 2. Descending (Z-A / 9-0)                  ║")
+	fmt.Println(padding + "╚════════════════════════════════════════════╝")
+	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&jenisUrutan)
 	
 	var isAscending bool = (jenisUrutan == 1)
 	var algoritma int
 	
-	fmt.Println("\nAlgoritma pengurutan:")
-	fmt.Println("1. Selection Sort")
-	fmt.Println("2. Insertion Sort")
-	fmt.Print("Pilihan Anda: ")
+	fmt.Println()
+	fmt.Println(padding + "╔════════════════════════════════╗")
+	fmt.Println(padding + "║       ALGORITMA PENGURUTAN     ║")
+	fmt.Println(padding + "╠════════════════════════════════╣")
+	fmt.Println(padding + "║ 1. Selection Sort              ║")
+	fmt.Println(padding + "║ 2. Insertion Sort              ║")
+	fmt.Println(padding + "╚════════════════════════════════╝")
+	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&algoritma)
 	
 	var timAktif []TimEsport
@@ -388,7 +440,7 @@ func urutkanTim() {
 	}
 	
 	if len(timAktif) == 0 {
-		fmt.Println("\nBelum ada tim aktif yang terdaftar.")
+		fmt.Println(padding + "Belum ada tim aktif yang terdaftar.")
 		return
 	}
 	
@@ -404,7 +456,7 @@ func urutkanTim() {
 		case 4:
 			selectionSortByPoin(timAktif, isAscending)
 		default:
-			fmt.Println("\nPilihan tidak valid.")
+			fmt.Println(padding + "Pilihan tidak valid.")
 			return
 		}
 	case 2:
@@ -418,27 +470,31 @@ func urutkanTim() {
 		case 4:
 			insertionSortByPoin(timAktif, isAscending)
 		default:
-			fmt.Println("\nPilihan tidak valid.")
+			fmt.Println(padding + "Pilihan tidak valid.")
 			return
 		}
 	default:
-		fmt.Println("\nPilihan tidak valid.")
+		fmt.Println(padding + "Pilihan tidak valid.")
 		return
 	}
 	
 	// Tampilkan hasil pengurutan
-	fmt.Println("\n--- HASIL PENGURUTAN ---")
-	fmt.Printf("%-5s %-20s %-20s %-5s\n", "ID", "Nama Tim", "Fakultas", "Poin")
-	fmt.Println("---------------------------------------------------")
-	
+	fmt.Println()
+	fmt.Println()
+	fmt.Println(padding + "╔═══════════════════════════════════════════════════════════════════╗")
+	fmt.Println(padding + "║ ID  |      Nama Tim        |      Fakultas        | Poin          ║")
+	fmt.Println(padding + "╠═══════════════════════════════════════════════════════════════════╣")
+
 	for i := 0; i < len(timAktif); i++ {
-		fmt.Printf("%-5s %-20s %-20s %-5d\n", 
-			timAktif[i].ID, 
-			timAktif[i].Nama, 
-			timAktif[i].Fakultas, 
+		fmt.Printf(padding+"║ %-3s | %-20s | %-20s | %-13d ║\n",
+			timAktif[i].ID,
+			timAktif[i].Nama,
+			timAktif[i].Fakultas,
 			timAktif[i].Poin)
 	}
+	fmt.Println(padding + "╚═══════════════════════════════════════════════════════════════════╝")
 }
+
 
 // Implementasi Selection Sort
 
