@@ -1,4 +1,3 @@
-Berikut adalah `README.md` yang disesuaikan dengan struktur program Go yang telah kita kerjakan dan informasi pembagian tugas serta jadwal yang Anda berikan:
 
 ```markdown
 # Sistem Pendaftaran Lomba Esport Antar Fakultas (TUBES-ALPRO)
