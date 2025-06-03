@@ -65,7 +65,7 @@ func main() {
 			fmt.Println(padding + "Terima kasih telah menggunakan sistem pendaftaran lomba esport!")
 			return
 		default:
-			fmt.Println(padding + "Pilihan tidak valid. Silakan coba lagi.")
+			fmt.Println(padding + "Pilihan tidak valid. Silakan coba lagi")
 		}
 		fmt.Println("\nTekan Enter untuk melanjutkan...")
 		fmt.Scanln() // Membersihkan buffer
@@ -416,7 +416,7 @@ func updateTim() {
 
 	idx := sequentialSearchByIDGlobal(id)
 	if idx == -1 {
-		fmt.Println("\nTim dengan ID tersebut tidak ditemukan.")
+		fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan.")
 		return
 	}
 
