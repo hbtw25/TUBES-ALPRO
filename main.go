@@ -5,6 +5,9 @@ import (
 	"strings"
 )
 
+// Konstanta untuk kapasitas maksimum tim
+const NMAX int = 5
+
 // Struktur data untuk Tim Esport
 type TimEsport struct {
 	ID       string
@@ -14,33 +17,40 @@ type TimEsport struct {
 }
 
 // Variabel global untuk menyimpan data tim
-var timData [5]TimEsport // Array statis dengan kapasitas 5 tim (sesuai file awal)
-var jumlahTim int = 0    // Jumlah tim yang tersimpan
+var timData [NMAX]TimEsport // IS: Array kosong saat program dimulai (sebelum tambahDataDummy). FS: Berisi data tim selama runtime.
+var jumlahTim int = 0       // IS: 0 saat program dimulai. FS: Jumlah aktual tim yang tersimpan.
 
-// Fungsi untuk menambahkan data dummy
+// tambahDataDummy mengisi array timData dengan data awal.
+// IS: timData mungkin kosong atau sudah berisi data, jumlahTim adalah jumlah tim saat ini.
+// FS: Jika NMAX belum tercapai, timData ditambahkan hingga 3 tim dummy, jumlahTim diperbarui.
 func tambahDataDummy() {
-	// Pastikan tidak melebihi kapasitas
-	if jumlahTim < len(timData) {
+	if jumlahTim < NMAX {
 		timData[jumlahTim] = TimEsport{ID: "T01", Nama: "Alpha Coders", Fakultas: "Informatika", Poin: 100}
 		jumlahTim++
 	}
-	if jumlahTim < len(timData) {
+	if jumlahTim < NMAX {
 		timData[jumlahTim] = TimEsport{ID: "T02", Nama: "Beta Testers", Fakultas: "Elektro", Poin: 85}
 		jumlahTim++
 	}
-	if jumlahTim < len(timData) {
+	if jumlahTim < NMAX {
 		timData[jumlahTim] = TimEsport{ID: "T03", Nama: "Gamma Gamers", Fakultas: "DKV", Poin: 92}
 		jumlahTim++
 	}
 }
 
-// Fungsi utama
+// main adalah fungsi utama yang menjalankan program.
+// IS: Program baru dimulai, data dummy akan ditambahkan.
+// FS: Program berakhir setelah pengguna memilih opsi keluar (0).
 func main() {
-	tambahDataDummy() // Panggil fungsi untuk menambahkan data dummy di awal
+	tambahDataDummy()
 
 	var pilihan int
 	padding := "                                  "
 
+	// Loop utama program.
+	// IS (setiap iterasi): Menunggu input pilihan dari pengguna.
+	// FS (setiap iterasi): Pilihan pengguna diproses.
+	// FS (loop): Berakhir ketika pilihan == 0.
 	for {
 		tampilkanMenu()
 		fmt.Print("Pilihan Anda: ")
@@ -65,18 +75,20 @@ func main() {
 			fmt.Println(padding + "Terima kasih telah menggunakan sistem pendaftaran lomba esport!")
 			return
 		default:
-			fmt.Println(padding + "Pilihan tidak valid. Silakan coba lagi.")
+			fmt.Println(padding + "Pilihan tidak valid. Silakan coba lagi")
 		}
 		fmt.Println("\nTekan Enter untuk melanjutkan...")
-		fmt.Scanln() // Membersihkan buffer
+		fmt.Scanln()
 		var dummy string
-		fmt.Scanln(&dummy) // Menunggu Enter
+		fmt.Scanln(&dummy)
 	}
 }
 
-// Menampilkan menu utama
+// tampilkanMenu menampilkan daftar opsi kepada pengguna.
+// IS: Tidak ada state input khusus.
+// FS: Menu tercetak di konsol.
 func tampilkanMenu() {
-	indent := "                                  " // 34 spasi
+	indent := "                                  "
 	fmt.Println(indent + "╔═══════════════════════════════════════════════════════════════════════════╗")
 	fmt.Println(indent + "║                       SISTEM PENDAFTARAN LOMBA ESPORT                     ║")
 	fmt.Println(indent + "║                Tugas Besar Algortima Pemrograman Semester 2               ║")
@@ -101,9 +113,11 @@ func tampilkanMenu() {
 	fmt.Print(indent + "")
 }
 
-// Menambahkan tim baru
+// tambahTim menambahkan data tim baru.
+// IS: jumlahTim < NMAX. Pengguna siap memasukkan data tim.
+// FS: Jika ID unik & kapasitas ada, tim baru ditambahkan ke timData, jumlahTim++. Jika tidak, pesan error.
 func tambahTim() {
-	if jumlahTim >= len(timData) {
+	if jumlahTim >= NMAX {
 		indent := "                                   "
 		fmt.Println(indent + "Maaf, kapasitas tim sudah penuh!")
 		return
@@ -111,13 +125,14 @@ func tambahTim() {
 
 	var tim TimEsport
 	indent := "                                  "
-
 	fmt.Println(indent + "TAMBAH TIM BARU")
 
+	// Loop validasi ID Tim.
+	// IS (loop): ID tim belum tervalidasi.
+	// FS (loop): tim.ID valid (unik).
 	for {
 		fmt.Print(indent + "ID Tim: ")
 		fmt.Scan(&tim.ID)
-
 		if sequentialSearchByIDGlobal(tim.ID) == -1 {
 			break
 		}
@@ -143,43 +158,42 @@ func tambahTim() {
 
 	timData[jumlahTim] = tim
 	jumlahTim++
-
 	fmt.Println(indent + "Tim berhasil ditambahkan!")
 }
 
-// Menampilkan semua tim
+// tampilkanSemuaTim menampilkan semua data tim yang tersimpan.
+// IS: timData dan jumlahTim mencerminkan state tim saat ini.
+// FS: Data semua tim tercetak, atau pesan jika tidak ada tim.
 func tampilkanSemuaTim() {
 	if jumlahTim == 0 {
 		padding := "                                  "
 		fmt.Println(padding + "Belum ada tim yang terdaftar...")
 		return
 	}
-
 	padding := "                                  "
-
 	fmt.Println()
 	fmt.Println(padding + "╔═══════════════════════════════════════════════════════════════════╗")
 	fmt.Println(padding + "║ ID  | Nama Tim             | Fakultas             | Poin          ║")
 	fmt.Println(padding + "╠═══════════════════════════════════════════════════════════════════╣")
-
+	// Loop tampilkan tim.
+	// IS (loop): i = 0.
+	// FS (loop): Semua tim (0 hingga jumlahTim-1) ditampilkan.
 	for i := 0; i < jumlahTim; i++ {
 		fmt.Printf(padding+"║ %-3s | %-20s | %-20s | %-13d ║\n",
-			timData[i].ID,
-			timData[i].Nama,
-			timData[i].Fakultas,
-			timData[i].Poin)
+			timData[i].ID, timData[i].Nama, timData[i].Fakultas, timData[i].Poin)
 	}
 	fmt.Println(padding + "╚═══════════════════════════════════════════════════════════════════╝")
 }
 
-// --- Fungsi-Fungsi Pencarian ---
-
-// sequentialSearchByIDGlobal mencari tim berdasarkan ID di array global timData.
-// Mengacu pada Modul 11.1.
+// sequentialSearchByIDGlobal mencari tim berdasarkan ID.
+// IS: id = ID yang dicari. timData, jumlahTim adalah state global.
+// FS: Index i jika timData[i].ID == id, atau -1 jika tidak ditemukan.
 func sequentialSearchByIDGlobal(id string) int {
 	var i int = 0
-	var found bool = false // Status pencarian [cite: 1624]
-	// Proses pencarian berhenti jika ditemukan atau sudah semua data dicek
+	var found bool = false
+	// Loop pencarian.
+	// IS (loop): i = 0, found = false.
+	// FS (loop): (found == true && timData[i].ID == id) || (i == jumlahTim && found == false).
 	for i < jumlahTim && !found {
 		if timData[i].ID == id {
 			found = true
@@ -188,17 +202,21 @@ func sequentialSearchByIDGlobal(id string) int {
 		}
 	}
 	if found {
-		return i // Mengembalikan indeks data yang ditemukan
+		return i
 	}
-	return -1 // Data tidak ditemukan [cite: 1631]
+	return -1
 }
 
-// sequentialSearchByNamaGlobal mencari tim berdasarkan Nama di array global timData.
-// Mengacu pada Modul 11.1 dan 11.2. [cite: 1632, 1633]
+// sequentialSearchByNamaGlobal mencari tim berdasarkan Nama (case-insensitive).
+// IS: nama = Nama yang dicari. timData, jumlahTim adalah state global.
+// FS: Index i jika nama tim cocok (case-insensitive), atau -1 jika tidak.
 func sequentialSearchByNamaGlobal(nama string) int {
 	var i int = 0
 	var found bool = false
 	namaLower := strings.ToLower(nama)
+	// Loop pencarian.
+	// IS (loop): i = 0, found = false.
+	// FS (loop): (found == true && cocok nama) || (i == jumlahTim && found == false).
 	for i < jumlahTim && !found {
 		if strings.ToLower(timData[i].Nama) == namaLower {
 			found = true
@@ -212,42 +230,50 @@ func sequentialSearchByNamaGlobal(nama string) int {
 	return -1
 }
 
-// binarySearchByID mencari tim berdasarkan ID dalam slice yang sudah terurut.
-// Mengacu pada Modul 12.1. [cite: 1672]
-func binarySearchByID(slice []TimEsport, idCari string) int {
+// binarySearchByID mencari tim berdasarkan ID dalam array `arr` (sebanyak `n` elemen, terurut).
+// Precondition: arr[0...n-1] terurut berdasarkan ID.
+// IS: arr menunjuk ke array, n jumlah elemen, idCari adalah target. kr=0, kn=n-1, found=false.
+// FS: Index med jika arr[med].ID == idCari, atau -1 jika tidak.
+func binarySearchByID(arr *[NMAX]TimEsport, n int, idCari string) int {
 	var kr, kn, med int
-	kr = 0              // Indeks kiri [cite: 1678]
-	kn = len(slice) - 1 // Indeks kanan [cite: 1678]
+	kr = 0
+	kn = n - 1
 	var found bool = false
-
+	// Loop pencarian biner.
+	// IS (loop): kr <= kn, found = false. Batas pencarian [kr...kn].
+	// FS (loop): (found == true && arr[med].ID == idCari) || (kr > kn && found == false).
 	for kr <= kn && !found {
-		med = (kr + kn) / 2 // Ambil data tengah [cite: 1673, 1678]
-		if slice[med].ID == idCari {
+		med = (kr + kn) / 2
+		if arr[med].ID == idCari {
 			found = true
-		} else if slice[med].ID < idCari { // Jika data tengah lebih kecil, geser ke kanan [cite: 1674, 1678]
+		} else if arr[med].ID < idCari {
 			kr = med + 1
-		} else { // Jika data tengah lebih besar, geser ke kiri [cite: 1676, 1678]
+		} else {
 			kn = med - 1
 		}
 	}
 	if found {
-		return med // Kembalikan indeks elemen yang ditemukan [cite: 1678]
+		return med
 	}
-	return -1 // Kembalikan -1 jika tidak ditemukan [cite: 1684]
+	return -1
 }
 
-// binarySearchByNama mencari tim berdasarkan Nama dalam slice yang sudah terurut.
-// Mengacu pada Modul 12.1 dan 12.2. [cite: 1672, 1686]
-func binarySearchByNama(slice []TimEsport, namaCari string) int {
+// binarySearchByNama mencari tim berdasarkan Nama dalam array `arr` (sebanyak `n` elemen, terurut, case-insensitive).
+// Precondition: arr[0...n-1] terurut berdasarkan Nama (case-insensitive).
+// IS: arr menunjuk ke array, n jumlah elemen, namaCari target. kr=0, kn=n-1, found=false.
+// FS: Index med jika nama cocok (case-insensitive), atau -1 jika tidak.
+func binarySearchByNama(arr *[NMAX]TimEsport, n int, namaCari string) int {
 	var kr, kn, med int
 	kr = 0
-	kn = len(slice) - 1
+	kn = n - 1
 	var found bool = false
 	namaCariLower := strings.ToLower(namaCari)
-
+	// Loop pencarian biner.
+	// IS (loop): kr <= kn, found = false. Batas [kr...kn].
+	// FS (loop): (found == true && cocok nama) || (kr > kn && found == false).
 	for kr <= kn && !found {
 		med = (kr + kn) / 2
-		namaDataMedLower := strings.ToLower(slice[med].Nama)
+		namaDataMedLower := strings.ToLower(arr[med].Nama)
 		if namaDataMedLower == namaCariLower {
 			found = true
 		} else if namaDataMedLower < namaCariLower {
@@ -262,7 +288,9 @@ func binarySearchByNama(slice []TimEsport, namaCari string) int {
 	return -1
 }
 
-// Mencari tim (menu)
+// cariTim memproses pencarian tim.
+// IS: Pengguna memilih opsi "Cari Tim".
+// FS: Hasil pencarian ditampilkan.
 func cariTim() {
 	var PilihanPencarian int
 	padding := "                                  "
@@ -282,7 +310,6 @@ func cariTim() {
 	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&PilihanPencarian)
 
-	// Validasi untuk pilihan field pencarian
 	if PilihanPencarian < 1 || PilihanPencarian > 2 {
 		fmt.Println(padding + "Pilihan field pencarian tidak valid.")
 		return
@@ -299,7 +326,6 @@ func cariTim() {
 	fmt.Print(padding + "Pilihan Algoritma: ")
 	fmt.Scan(&algorithmChoice)
 
-	// Validasi untuk pilihan algoritma
 	if algorithmChoice < 1 || algorithmChoice > 2 {
 		fmt.Println(padding + "Pilihan algoritma tidak valid.")
 		return
@@ -310,33 +336,28 @@ func cariTim() {
 		var id string
 		fmt.Print(padding + "Masukkan ID Tim: ")
 		fmt.Scan(&id)
-
-		if algorithmChoice == 1 { // Sequential Search berdasarkan ID
+		if algorithmChoice == 1 {
 			idx := sequentialSearchByIDGlobal(id)
 			if idx != -1 {
 				tampilkanDetailTimByIndex(idx)
 			} else {
 				fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan (Sequential).")
 			}
-		} else if algorithmChoice == 2 { // Binary Search berdasarkan ID
+		} else if algorithmChoice == 2 {
 			if jumlahTim == 0 {
 				fmt.Println(padding + "Tidak ada data untuk dilakukan binary search.")
 				return
 			}
-			searchableTeams := make([]TimEsport, jumlahTim)
-			copy(searchableTeams, timData[:jumlahTim])
-			// Menggunakan gaya selection sort dari modul (indeks 0 to n-1)
-			// Untuk binary search, data harus diurutkan menaik
-			selectionSortByID(searchableTeams, true) // true berarti urutan menaik
-
-			idxInSortedSlice := binarySearchByID(searchableTeams, id)
-			if idxInSortedSlice != -1 {
-				tampilkanDetailTimData(searchableTeams[idxInSortedSlice])
+			var searchableTeamsArray [NMAX]TimEsport                                   // IS: Array kosong.
+			copy(searchableTeamsArray[:jumlahTim], timData[:jumlahTim])                // FS: Array berisi salinan data tim.
+			selectionSortByID(&searchableTeamsArray, jumlahTim, true)                  // IS: Array belum terurut. FS: Array terurut by ID.
+			idxInSortedArray := binarySearchByID(&searchableTeamsArray, jumlahTim, id) // IS: Array terurut. FS: idxInSortedArray berisi hasil.
+			if idxInSortedArray != -1 {
+				tampilkanDetailTimData(searchableTeamsArray[idxInSortedArray])
 			} else {
 				fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan (Binary).")
 			}
 		}
-
 	case 2: // Cari berdasarkan Nama
 		var nama string
 		fmt.Print(padding + "Masukkan Nama Tim: ")
@@ -345,26 +366,24 @@ func cariTim() {
 		fmt.Scanln(&namaTambahan)
 		nama = nama + namaTambahan
 		nama = strings.TrimSpace(nama)
-
-		if algorithmChoice == 1 { // Sequential Search berdasarkan Nama
+		if algorithmChoice == 1 {
 			idx := sequentialSearchByNamaGlobal(nama)
 			if idx != -1 {
 				tampilkanDetailTimByIndex(idx)
 			} else {
 				fmt.Println(padding + "Tim dengan nama tersebut tidak ditemukan (Sequential).")
 			}
-		} else if algorithmChoice == 2 { // Binary Search berdasarkan Nama
+		} else if algorithmChoice == 2 {
 			if jumlahTim == 0 {
 				fmt.Println(padding + "Tidak ada data untuk dilakukan binary search.")
 				return
 			}
-			searchableTeams := make([]TimEsport, jumlahTim)
-			copy(searchableTeams, timData[:jumlahTim])
-			selectionSortByNama(searchableTeams, true) // Urutkan dulu untuk Binary Search (menaik)
-
-			idxInSortedSlice := binarySearchByNama(searchableTeams, nama)
-			if idxInSortedSlice != -1 {
-				tampilkanDetailTimData(searchableTeams[idxInSortedSlice])
+			var searchableTeamsArray [NMAX]TimEsport                                       // IS: Array kosong.
+			copy(searchableTeamsArray[:jumlahTim], timData[:jumlahTim])                    // FS: Array berisi salinan data tim.
+			selectionSortByNama(&searchableTeamsArray, jumlahTim, true)                    // IS: Array belum terurut. FS: Array terurut by Nama.
+			idxInSortedArray := binarySearchByNama(&searchableTeamsArray, jumlahTim, nama) // IS: Array terurut. FS: idxInSortedArray berisi hasil.
+			if idxInSortedArray != -1 {
+				tampilkanDetailTimData(searchableTeamsArray[idxInSortedArray])
 			} else {
 				fmt.Println(padding + "Tim dengan nama tersebut tidak ditemukan (Binary).")
 			}
@@ -372,7 +391,9 @@ func cariTim() {
 	}
 }
 
-// Menampilkan detail tim berdasarkan indeks di timData
+// tampilkanDetailTimByIndex menampilkan detail tim dari timData berdasarkan indeks.
+// IS: idx adalah indeks valid di timData (0 <= idx < jumlahTim).
+// FS: Detail tim timData[idx] tercetak.
 func tampilkanDetailTimByIndex(idx int) {
 	padding := "                                  "
 	fmt.Println()
@@ -386,7 +407,9 @@ func tampilkanDetailTimByIndex(idx int) {
 	fmt.Println(padding + "╚═══════════════════════════════╝")
 }
 
-// Menampilkan detail tim dari struct TimEsport (untuk hasil binary search dari slice copy)
+// tampilkanDetailTimData menampilkan detail tim dari struct TimEsport.
+// IS: tim berisi data tim yang akan ditampilkan.
+// FS: Detail tim tercetak.
 func tampilkanDetailTimData(tim TimEsport) {
 	padding := "                                  "
 	fmt.Println()
@@ -400,7 +423,9 @@ func tampilkanDetailTimData(tim TimEsport) {
 	fmt.Println(padding + "╚═══════════════════════════════╝")
 }
 
-// Update data tim
+// updateTim memperbarui data tim.
+// IS: Pengguna memasukkan ID tim.
+// FS: Jika tim ditemukan, field yang dipilih diperbarui di timData. Jika tidak, pesan error.
 func updateTim() {
 	var id string
 	padding := "                                  "
@@ -410,18 +435,15 @@ func updateTim() {
 		fmt.Println(padding + "Belum ada tim yang terdaftar untuk diupdate.")
 		return
 	}
-
 	fmt.Print(padding + "Masukkan ID Tim yang akan diupdate: ")
 	fmt.Scan(&id)
-
 	idx := sequentialSearchByIDGlobal(id)
 	if idx == -1 {
-		fmt.Println("\nTim dengan ID tersebut tidak ditemukan.")
+		fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan.")
 		return
 	}
 
 	tampilkanDetailTimByIndex(idx)
-
 	var pilihan int
 	fmt.Println()
 	fmt.Println(padding + "╔═══════════════════════════════╗")
@@ -442,7 +464,7 @@ func updateTim() {
 		var namaTambahan string
 		fmt.Scanln(&namaTambahan)
 		nama = nama + namaTambahan
-		timData[idx].Nama = strings.TrimSpace(nama)
+		timData[idx].Nama = strings.TrimSpace(nama) // FS: timData[idx].Nama diperbarui.
 		fmt.Println(padding + "Nama tim berhasil diupdate!")
 	case 2:
 		var fakultas string
@@ -451,34 +473,33 @@ func updateTim() {
 		var fakultasTambahan string
 		fmt.Scanln(&fakultasTambahan)
 		fakultas = fakultas + fakultasTambahan
-		timData[idx].Fakultas = strings.TrimSpace(fakultas)
+		timData[idx].Fakultas = strings.TrimSpace(fakultas) // FS: timData[idx].Fakultas diperbarui.
 		fmt.Println(padding + "Fakultas berhasil diupdate!")
 	case 3:
 		var poin int
 		fmt.Print(padding + "Poin Baru: ")
 		fmt.Scan(&poin)
-		timData[idx].Poin = poin
+		timData[idx].Poin = poin // FS: timData[idx].Poin diperbarui.
 		fmt.Println(padding + "Poin berhasil diupdate!")
 	default:
 		fmt.Println(padding + "Pilihan tidak valid.")
 	}
 }
 
-// Hapus tim (Penghapusan Fisik)
+// hapusTim menghapus data tim.
+// IS: Pengguna memasukkan ID tim.
+// FS: Jika tim ditemukan & dikonfirmasi, tim dihapus dari timData, jumlahTim--. Jika tidak, pesan error/batal.
 func hapusTim() {
 	var id string
 	padding := "                                  "
-
 	fmt.Println(padding + "HAPUS TIM")
 
 	if jumlahTim == 0 {
 		fmt.Println(padding + "Belum ada tim yang terdaftar untuk dihapus.")
 		return
 	}
-
 	fmt.Print(padding + "Masukkan ID Tim yang akan dihapus: ")
 	fmt.Scan(&id)
-
 	idx := sequentialSearchByIDGlobal(id)
 	if idx == -1 {
 		fmt.Println(padding + "Tim dengan ID tersebut tidak ditemukan.")
@@ -486,24 +507,28 @@ func hapusTim() {
 	}
 
 	tampilkanDetailTimByIndex(idx)
-
 	var konfirmasi string
 	fmt.Print(padding + "Apakah Anda yakin ingin menghapus tim ini? (y/n): ")
 	fmt.Scan(&konfirmasi)
 
 	if strings.ToLower(konfirmasi) == "y" {
+		// Loop geser elemen.
+		// IS (loop): i = idx.
+		// FS (loop): Elemen timData[idx+1...jumlahTim-1] digeser ke kiri.
 		for i := idx; i < jumlahTim-1; i++ {
 			timData[i] = timData[i+1]
 		}
 		jumlahTim--
-		timData[jumlahTim] = TimEsport{} // Mengosongkan data di posisi terakhir
+		timData[jumlahTim] = TimEsport{} // Mengosongkan posisi terakhir yang ditinggalkan.
 		fmt.Println(padding + "Tim berhasil dihapus!")
 	} else {
 		fmt.Println(padding + "Penghapusan dibatalkan.")
 	}
 }
 
-// Menampilkan statistik tim
+// tampilkanStatistik menghitung dan menampilkan statistik tim.
+// IS: timData dan jumlahTim mencerminkan state tim saat ini.
+// FS: Statistik tim tercetak. Pesan jika tidak ada tim.
 func tampilkanStatistik() {
 	padding := "                                  "
 	if jumlahTim == 0 {
@@ -511,24 +536,32 @@ func tampilkanStatistik() {
 		return
 	}
 
-	var totalPoin int
-	minPoin := timData[0].Poin
-	maxPoin := timData[0].Poin
-	timMinPoin := timData[0].Nama
-	timMaxPoin := timData[0].Nama
+	var totalPoin int = 0
+	var minPoin int
+	var maxPoin int
+	var timMinPoin string
+	var timMaxPoin string
 
-	totalPoin += timData[0].Poin
-
-	for i := 1; i < jumlahTim; i++ {
-		if timData[i].Poin < minPoin {
-			minPoin = timData[i].Poin
-			timMinPoin = timData[i].Nama
-		}
-		if timData[i].Poin > maxPoin {
-			maxPoin = timData[i].Poin
-			timMaxPoin = timData[i].Nama
-		}
+	// Loop hitung statistik.
+	// IS (loop): i = 0. Variabel statistik akan diinisialisasi/diperbarui.
+	// FS (loop): totalPoin, minPoin, maxPoin, timMinPoin, timMaxPoin berisi nilai yang sesuai.
+	for i := 0; i < jumlahTim; i++ {
 		totalPoin += timData[i].Poin
+		if i == 0 {
+			minPoin = timData[i].Poin
+			maxPoin = timData[i].Poin
+			timMinPoin = timData[i].Nama
+			timMaxPoin = timData[i].Nama
+		} else {
+			if timData[i].Poin < minPoin {
+				minPoin = timData[i].Poin
+				timMinPoin = timData[i].Nama
+			}
+			if timData[i].Poin > maxPoin {
+				maxPoin = timData[i].Poin
+				timMaxPoin = timData[i].Nama
+			}
+		}
 	}
 
 	rataRataPoin := float64(totalPoin) / float64(jumlahTim)
@@ -543,61 +576,62 @@ func tampilkanStatistik() {
 	fmt.Println(padding+"Poin Terendah        :", minPoin, "(", timMinPoin, ")")
 }
 
-// --- Fungsi-Fungsi Pengurutan (disesuaikan dengan gaya modul) ---
-
-// selectionSortByID mengurutkan slice TimEsport berdasarkan ID.
-// Mengacu pada Modul 13.1 & 13.2. [cite: 1727, 1733]
-// Indeks array Go dimulai dari 0, jadi loop disesuaikan.
-// Modul seringkali menggunakan i dari 1 to n-1 atau 0 to n-1.
-// Di sini i adalah iterasi luar (pass), j adalah loop dalam untuk pencarian minimum/maksimum.
-func selectionSortByID(arr []TimEsport, isAscending bool) {
-	n := len(arr)
-	// i: iterasi luar (pass), j: loop dalam, idx_min_max: indeks nilai ekstrim
+// selectionSortByID mengurutkan `n` elemen pertama dari `arr` berdasarkan ID.
+// IS: arr menunjuk ke array, n jumlah elemen valid. isAscending menentukan urutan.
+// FS: n elemen pertama arr terurut berdasarkan ID sesuai isAscending.
+func selectionSortByID(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j, idx_min_max int
-	var t TimEsport // Untuk pertukaran
-
-	i = 1          // Iterasi luar dimulai dari 1 (elemen pertama arr[0] adalah acuan awal)
-	for i <= n-1 { // Loop sebanyak n-1 iterasi luar
-		idx_min_max = i - 1 // Inisialisasi idx_min_max ke elemen pertama dari bagian belum terurut
-		// (arr[i-1] dalam iterasi ke-i)
-		j = i // Loop dalam mulai dari elemen setelah arr[i-1]
+	var t TimEsport
+	// Loop utama Selection Sort (pass).
+	// IS (outer loop): i = 1. arr[0...i-2] terurut (awalnya kosong).
+	// FS (outer loop): arr[0...n-1] terurut.
+	i = 1
+	for i <= n-1 {
+		// IS (pass i): arr[0...i-2] terurut. arr[i-1...n-1] belum tentu. idx_min_max = i-1 (kandidat awal).
+		idx_min_max = i - 1
+		// Inner loop: cari elemen min/max di sisa array.
+		// IS (inner loop): j = i. idx_min_max adalah kandidat min/max dari arr[i-1].
+		// FS (inner loop): idx_min_max menunjuk ke elemen min/max sebenarnya di arr[i-1...n-1].
+		j = i
 		for j < n {
 			if isAscending {
 				if arr[j].ID < arr[idx_min_max].ID {
 					idx_min_max = j
 				}
-			} else { // Urutan menurun
+			} else {
 				if arr[j].ID > arr[idx_min_max].ID {
 					idx_min_max = j
 				}
 			}
 			j = j + 1
 		}
-		// Tukar elemen arr[i-1] dengan elemen pada arr[idx_min_max]
 		t = arr[idx_min_max]
 		arr[idx_min_max] = arr[i-1]
 		arr[i-1] = t
+		// FS (pass i): arr[0...i-1] terurut.
 		i = i + 1
 	}
 }
 
-// selectionSortByNama mengurutkan slice TimEsport berdasarkan Nama.
-func selectionSortByNama(arr []TimEsport, isAscending bool) {
-	n := len(arr)
-	// i: iterasi luar (pass), j: loop dalam, idx_min_max: indeks nilai ekstrim
+// selectionSortByNama mengurutkan `n` elemen dari `arr` berdasarkan Nama (case-insensitive).
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Nama.
+func selectionSortByNama(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j, idx_min_max int
-	var t TimEsport // Untuk pertukaran
+	var t TimEsport
 	i = 1
 	for i <= n-1 {
 		idx_min_max = i - 1
 		j = i
 		for j < n {
+			namaJLower := strings.ToLower(arr[j].Nama)
+			namaIdxMinMaxLower := strings.ToLower(arr[idx_min_max].Nama)
 			if isAscending {
-				if strings.ToLower(arr[j].Nama) < strings.ToLower(arr[idx_min_max].Nama) {
+				if namaJLower < namaIdxMinMaxLower {
 					idx_min_max = j
 				}
-			} else { // Urutan menurun
-				if strings.ToLower(arr[j].Nama) > strings.ToLower(arr[idx_min_max].Nama) {
+			} else {
+				if namaJLower > namaIdxMinMaxLower {
 					idx_min_max = j
 				}
 			}
@@ -610,23 +644,25 @@ func selectionSortByNama(arr []TimEsport, isAscending bool) {
 	}
 }
 
-// selectionSortByFakultas mengurutkan slice TimEsport berdasarkan Fakultas.
-func selectionSortByFakultas(arr []TimEsport, isAscending bool) {
-	n := len(arr)
-	// i: iterasi luar (pass), j: loop dalam, idx_min_max: indeks nilai ekstrim
+// selectionSortByFakultas mengurutkan `n` elemen dari `arr` berdasarkan Fakultas (case-insensitive).
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Fakultas.
+func selectionSortByFakultas(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j, idx_min_max int
-	var t TimEsport // Untuk pertukaran
+	var t TimEsport
 	i = 1
 	for i <= n-1 {
 		idx_min_max = i - 1
 		j = i
 		for j < n {
+			fakultasJLower := strings.ToLower(arr[j].Fakultas)
+			fakultasIdxMinMaxLower := strings.ToLower(arr[idx_min_max].Fakultas)
 			if isAscending {
-				if strings.ToLower(arr[j].Fakultas) < strings.ToLower(arr[idx_min_max].Fakultas) {
+				if fakultasJLower < fakultasIdxMinMaxLower {
 					idx_min_max = j
 				}
-			} else { // Urutan menurun
-				if strings.ToLower(arr[j].Fakultas) > strings.ToLower(arr[idx_min_max].Fakultas) {
+			} else {
+				if fakultasJLower > fakultasIdxMinMaxLower {
 					idx_min_max = j
 				}
 			}
@@ -639,12 +675,12 @@ func selectionSortByFakultas(arr []TimEsport, isAscending bool) {
 	}
 }
 
-// selectionSortByPoin mengurutkan slice TimEsport berdasarkan Poin.
-func selectionSortByPoin(arr []TimEsport, isAscending bool) {
-	n := len(arr)
-	// i: iterasi luar (pass), j: loop dalam, idx_min_max: indeks nilai ekstrim
+// selectionSortByPoin mengurutkan `n` elemen dari `arr` berdasarkan Poin.
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Poin.
+func selectionSortByPoin(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j, idx_min_max int
-	var t TimEsport // Untuk pertukaran
+	var t TimEsport
 	i = 1
 	for i <= n-1 {
 		idx_min_max = i - 1
@@ -654,7 +690,7 @@ func selectionSortByPoin(arr []TimEsport, isAscending bool) {
 				if arr[j].Poin < arr[idx_min_max].Poin {
 					idx_min_max = j
 				}
-			} else { // Urutan menurun
+			} else {
 				if arr[j].Poin > arr[idx_min_max].Poin {
 					idx_min_max = j
 				}
@@ -668,41 +704,42 @@ func selectionSortByPoin(arr []TimEsport, isAscending bool) {
 	}
 }
 
-// insertionSortByID mengurutkan slice TimEsport berdasarkan ID.
-// Mengacu pada Modul 14.1 & 14.2. [cite: 1764, 1771]
-// Modul menunjukkan loop i dari 1, j dari i, dan temp = a[j], lalu while j > 0.
-// Di sini i adalah batas antara bagian terurut dan tidak terurut.
-func insertionSortByID(arr []TimEsport, isAscending bool) {
-	n := len(arr)
+// insertionSortByID mengurutkan `n` elemen dari `arr` berdasarkan ID.
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan ID.
+func insertionSortByID(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j int
 	var temp TimEsport
-
+	// Loop utama Insertion Sort.
+	// IS (outer loop): i = 1. arr[0...i-1] terurut (awalnya arr[0]). temp = arr[i].
+	// FS (outer loop): arr[0...n-1] terurut.
 	for i = 1; i < n; i++ {
-		temp = arr[i] // Elemen yang akan disisipkan [cite: 1770]
-		j = i - 1     // Indeks terakhir dari bagian yang sudah terurut
-
+		temp = arr[i]
+		j = i - 1
+		// Inner loop: geser elemen di bagian terurut.
+		// IS (inner loop): j >= 0. temp dibandingkan dengan arr[j].
+		// FS (inner loop): Elemen digeser, j adalah posisi sebelum penyisipan temp atau j < 0.
 		if isAscending {
-			// Geser elemen dari bagian terurut yang lebih besar dari temp
 			for j >= 0 && arr[j].ID > temp.ID {
-				arr[j+1] = arr[j] // Geser ke kanan [cite: 1770]
+				arr[j+1] = arr[j]
 				j = j - 1
 			}
-		} else { // Urutan menurun
+		} else {
 			for j >= 0 && arr[j].ID < temp.ID {
 				arr[j+1] = arr[j]
 				j = j - 1
 			}
 		}
-		arr[j+1] = temp // Sisipkan temp pada posisi yang tepat [cite: 1770]
+		arr[j+1] = temp // FS (iterasi i): arr[0...i] terurut.
 	}
 }
 
-// insertionSortByNama mengurutkan slice TimEsport berdasarkan Nama.
-func insertionSortByNama(arr []TimEsport, isAscending bool) {
-	n := len(arr)
+// insertionSortByNama mengurutkan `n` elemen dari `arr` berdasarkan Nama (case-insensitive).
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Nama.
+func insertionSortByNama(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j int
 	var temp TimEsport
-
 	for i = 1; i < n; i++ {
 		temp = arr[i]
 		j = i - 1
@@ -712,7 +749,7 @@ func insertionSortByNama(arr []TimEsport, isAscending bool) {
 				arr[j+1] = arr[j]
 				j = j - 1
 			}
-		} else { // Urutan menurun
+		} else {
 			for j >= 0 && strings.ToLower(arr[j].Nama) < namatempLower {
 				arr[j+1] = arr[j]
 				j = j - 1
@@ -722,12 +759,12 @@ func insertionSortByNama(arr []TimEsport, isAscending bool) {
 	}
 }
 
-// insertionSortByFakultas mengurutkan slice TimEsport berdasarkan Fakultas.
-func insertionSortByFakultas(arr []TimEsport, isAscending bool) {
-	n := len(arr)
+// insertionSortByFakultas mengurutkan `n` elemen dari `arr` berdasarkan Fakultas (case-insensitive).
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Fakultas.
+func insertionSortByFakultas(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j int
 	var temp TimEsport
-
 	for i = 1; i < n; i++ {
 		temp = arr[i]
 		j = i - 1
@@ -737,7 +774,7 @@ func insertionSortByFakultas(arr []TimEsport, isAscending bool) {
 				arr[j+1] = arr[j]
 				j = j - 1
 			}
-		} else { // Urutan menurun
+		} else {
 			for j >= 0 && strings.ToLower(arr[j].Fakultas) < fakultastempLower {
 				arr[j+1] = arr[j]
 				j = j - 1
@@ -747,36 +784,33 @@ func insertionSortByFakultas(arr []TimEsport, isAscending bool) {
 	}
 }
 
-// insertionSortByPoin mengurutkan slice TimEsport berdasarkan Poin.
-// Mengacu pada Modul 14.1 & 14.2. [cite: 1764, 1771]
-// Contoh modul menggunakan loop for i<=n-1; temp=T[j]; for j>0 && temp > T[j-1] untuk descending
-// Di sini kita adaptasi untuk ascending/descending dengan parameter.
-func insertionSortByPoin(arr []TimEsport, isAscending bool) {
-	n := len(arr)
+// insertionSortByPoin mengurutkan `n` elemen dari `arr` berdasarkan Poin.
+// IS: arr, n, isAscending.
+// FS: n elemen arr terurut berdasarkan Poin.
+func insertionSortByPoin(arr *[NMAX]TimEsport, n int, isAscending bool) {
 	var i, j int
-	var temp TimEsport // Di modul disebut 'temp' [cite: 1770]
-
-	for i = 1; i < n; i++ { // Loop i dari 1 hingga n-1 [cite: 1770]
-		temp = arr[i] // Ambil elemen arr[i] sebagai temp (di modul arr[j] dengan j=i) [cite: 1770]
-		j = i - 1     // j adalah indeks terakhir dari bagian yang sudah terurut
-
+	var temp TimEsport
+	for i = 1; i < n; i++ {
+		temp = arr[i]
+		j = i - 1
 		if isAscending {
-			// Geser elemen dari bagian terurut yang lebih besar dari temp.Poin
-			for j >= 0 && arr[j].Poin > temp.Poin { // Kondisi while di modul [cite: 1770]
-				arr[j+1] = arr[j] // Geser elemen ke kanan [cite: 1770]
-				j = j - 1         // Pindah ke elemen sebelumnya di bagian terurut [cite: 1770]
+			for j >= 0 && arr[j].Poin > temp.Poin {
+				arr[j+1] = arr[j]
+				j = j - 1
 			}
-		} else { // Urutan menurun (sesuai contoh descending di modul [cite: 1770])
-			for j >= 0 && arr[j].Poin < temp.Poin { // `temp > T[j-1]` di modul untuk descending
+		} else {
+			for j >= 0 && arr[j].Poin < temp.Poin {
 				arr[j+1] = arr[j]
 				j = j - 1
 			}
 		}
-		arr[j+1] = temp // Sisipkan temp pada posisi yang tepat [cite: 1770]
+		arr[j+1] = temp
 	}
 }
 
-// Urutkan tim
+// urutkanTim menampilkan data tim yang diurutkan.
+// IS: Pengguna memilih "Urutkan Tim". timData berisi data tim.
+// FS: Salinan data tim diurutkan dan ditampilkan. timData global tidak berubah.
 func urutkanTim() {
 	var pilihanField, jenisUrutan, algoritmaPilihan int
 	padding := "                                  "
@@ -797,7 +831,6 @@ func urutkanTim() {
 	fmt.Println(padding + "╚═══════════════════════════════╝")
 	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&pilihanField)
-
 	if pilihanField < 1 || pilihanField > 4 {
 		fmt.Println(padding + "Pilihan field tidak valid.")
 		return
@@ -807,17 +840,16 @@ func urutkanTim() {
 	fmt.Println(padding + "╔════════════════════════════════════════════╗")
 	fmt.Println(padding + "║             JENIS PENGURUTAN               ║")
 	fmt.Println(padding + "╠════════════════════════════════════════════╣")
-	fmt.Println(padding + "║ 1. Ascending (A-Z / 0-9)                   ║") // "Ascending" di sini adalah bagian dari teks UI
-	fmt.Println(padding + "║ 2. Descending (Z-A / 9-0)                  ║") // "Descending" di sini adalah bagian dari teks UI
+	fmt.Println(padding + "║ 1. Ascending (A-Z / 0-9)                   ║")
+	fmt.Println(padding + "║ 2. Descending (Z-A / 9-0)                  ║")
 	fmt.Println(padding + "╚════════════════════════════════════════════╝")
 	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&jenisUrutan)
-
 	if jenisUrutan < 1 || jenisUrutan > 2 {
 		fmt.Println(padding + "Pilihan jenis pengurutan tidak valid.")
 		return
 	}
-	isAscending := (jenisUrutan == 1) // true jika pilihan 1 (Ascending/Menaik)
+	isAscending := (jenisUrutan == 1)
 
 	fmt.Println()
 	fmt.Println(padding + "╔════════════════════════════════╗")
@@ -828,52 +860,51 @@ func urutkanTim() {
 	fmt.Println(padding + "╚════════════════════════════════╝")
 	fmt.Print(padding + "Pilihan Anda: ")
 	fmt.Scan(&algoritmaPilihan)
-
 	if algoritmaPilihan < 1 || algoritmaPilihan > 2 {
 		fmt.Println(padding + "Pilihan algoritma pengurutan tidak valid.")
 		return
 	}
 
-	timToSort := make([]TimEsport, jumlahTim)
-	copy(timToSort, timData[:jumlahTim])
+	var timToSortArray [NMAX]TimEsport                    // IS: Array kosong.
+	copy(timToSortArray[:jumlahTim], timData[:jumlahTim]) // FS: Array berisi salinan data tim.
 
+	// IS (sebelum switch): timToSortArray adalah salinan data (belum terurut).
+	// FS (setelah switch): timToSortArray terurut sesuai pilihan.
 	switch algoritmaPilihan {
-	case 1: // Algoritma Selection Sort
+	case 1: // Selection Sort
 		switch pilihanField {
 		case 1:
-			selectionSortByID(timToSort, isAscending)
+			selectionSortByID(&timToSortArray, jumlahTim, isAscending)
 		case 2:
-			selectionSortByNama(timToSort, isAscending)
+			selectionSortByNama(&timToSortArray, jumlahTim, isAscending)
 		case 3:
-			selectionSortByFakultas(timToSort, isAscending)
+			selectionSortByFakultas(&timToSortArray, jumlahTim, isAscending)
 		case 4:
-			selectionSortByPoin(timToSort, isAscending)
+			selectionSortByPoin(&timToSortArray, jumlahTim, isAscending)
 		}
-	case 2: // Algoritma Insertion Sort
+	case 2: // Insertion Sort
 		switch pilihanField {
 		case 1:
-			insertionSortByID(timToSort, isAscending)
+			insertionSortByID(&timToSortArray, jumlahTim, isAscending)
 		case 2:
-			insertionSortByNama(timToSort, isAscending)
+			insertionSortByNama(&timToSortArray, jumlahTim, isAscending)
 		case 3:
-			insertionSortByFakultas(timToSort, isAscending)
+			insertionSortByFakultas(&timToSortArray, jumlahTim, isAscending)
 		case 4:
-			insertionSortByPoin(timToSort, isAscending)
+			insertionSortByPoin(&timToSortArray, jumlahTim, isAscending)
 		}
 	}
 
-	// Tampilkan hasil pengurutan
 	fmt.Println()
 	fmt.Println(padding + "╔═══════════════════════════════════════════════════════════════════╗")
 	fmt.Println(padding + "║ ID  | Nama Tim             | Fakultas             | Poin          ║")
 	fmt.Println(padding + "╠═══════════════════════════════════════════════════════════════════╣")
-
-	for i := 0; i < len(timToSort); i++ {
+	// Loop tampilkan hasil urut.
+	// IS (loop): i = 0. timToSortArray sudah terurut.
+	// FS (loop): Semua elemen timToSortArray (hingga jumlahTim) ditampilkan.
+	for i := 0; i < jumlahTim; i++ {
 		fmt.Printf(padding+"║ %-3s | %-20s | %-20s | %-13d ║\n",
-			timToSort[i].ID,
-			timToSort[i].Nama,
-			timToSort[i].Fakultas,
-			timToSort[i].Poin)
+			timToSortArray[i].ID, timToSortArray[i].Nama, timToSortArray[i].Fakultas, timToSortArray[i].Poin)
 	}
 	fmt.Println(padding + "╚═══════════════════════════════════════════════════════════════════╝")
 }
